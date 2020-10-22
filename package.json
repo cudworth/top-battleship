@@ -1,0 +1,14 @@
+{
+  "name": "top-battleship",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Austin Cudworth",
+  "license": "ISC",
+  "dependencies": {
+    "gitignore": "^0.6.0"
+  }
+}
