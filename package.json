@@ -10,5 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "gitignore": "^0.6.0"
+  },
+  "devDependencies": {
+    "jest": "^26.6.0"
   }
 }
