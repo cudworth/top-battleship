@@ -1,5 +1,5 @@
 const player = require('./player');
 
-test('player module test', () => {
-  expect(null).toBe(null);
+test('module returns an object', () => {
+  expect(typeof player()).toBe('object');
 });

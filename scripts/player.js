@@ -1,3 +1,5 @@
-function player() {}
+function player() {
+  return {};
+}
 
 module.exports = player;
