@@ -9,6 +9,12 @@ test('module has required methods', () => {
   const myShip = ship(4);
   expect(myShip.hit).toBeDefined();
   expect(myShip.isSunk).toBeDefined();
+  expect(myShip.length).toBeDefined();
+});
+
+test('has property length', () => {
+  const myShip = ship(4);
+  expect(myShip.length()).toBe(4);
 });
 
 test('registers hits accurately', () => {

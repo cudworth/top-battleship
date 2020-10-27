@@ -13,6 +13,7 @@ function ship(length) {
     isSunk: () => {
       return hits.includes(false) ? false : true;
     },
+    length: () => hits.length,
   };
 }
 
