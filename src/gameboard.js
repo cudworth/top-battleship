@@ -1,4 +1,6 @@
-const ship = require('./ship');
+//const ship = require('./ship');
+
+import ship from './ship';
 
 function gameBoard() {
   const primary = [];
@@ -14,7 +16,7 @@ function gameBoard() {
     }
   }
 
-  const placeShip = function ([r0, c0, dir, length]) {
+  function placeShip([r0, c0, dir, length]) {
     const indices = [];
 
     const myShip = ship(length);
@@ -54,39 +56,44 @@ function gameBoard() {
       });
     }
     return success;
-  };
+  }
 
-  const receiveAttack = function ([r, c]) {
+  function receiveAttack([r, c]) {
     const cell = primary[r][c];
     cell.attacked = true;
     if (cell.ship) {
       cell.ship.hit(cell.ship_index);
-      cell.ship.isSunk() ? console.log('YSMB') : null;
       return 'hit';
     } else {
       return 'miss';
     }
-  };
+  }
 
-  const allShipsSunk = function () {
+  function allShipsSunk() {
     return ships.every((ship) => {
       return ship.isSunk();
     });
-  };
+  }
 
-  const getPrimary = () => copyBoard(primary);
-  const getTracking = () => copyBoard(tracking);
+  function getPrimary() {
+    return copyBoard(primary);
+  }
+  function getTracking() {
+    return copyBoard(tracking);
+  }
 
-  const copyBoard = function (board) {
+  function copyBoard(board) {
     const copy = board.map((row) => {
       return row.map((cell) => {
         return { ...cell };
       });
     });
     return copy;
-  };
+  }
 
   return { placeShip, receiveAttack, getPrimary, getTracking, allShipsSunk };
 }
 
-module.exports = gameBoard;
+//module.exports = gameBoard;
+
+export default gameBoard;

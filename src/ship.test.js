@@ -1,4 +1,6 @@
-const ship = require('./ship');
+//const ship = require('./ship');
+
+import ship from './ship';
 
 test('module returns an object', () => {
   const myShip = ship(4);

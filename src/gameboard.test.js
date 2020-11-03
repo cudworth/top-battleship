@@ -1,5 +1,5 @@
-const gameBoard = require('./gameboard');
-const ship = require('./ship');
+//const gameBoard = require('./gameboard');
+import gameBoard from './gameboard';
 
 test('module returns an object', () => {
   const myGameBoard = gameBoard();

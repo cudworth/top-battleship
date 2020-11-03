@@ -17,4 +17,6 @@ function ship(length) {
   };
 }
 
-module.exports = ship;
+//module.exports = ship;
+
+export default ship;
