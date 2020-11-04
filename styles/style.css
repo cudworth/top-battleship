@@ -1,4 +1,4 @@
-.container {
+.grid {
   border: 0.5px solid lightgray;
   width: 400px;
   height: 400px;
@@ -24,4 +24,12 @@
 
 .ship {
   background-color: gray;
+}
+
+.hit {
+  background-color: red;
+}
+
+.miss {
+  background-color: lightblue;
 }

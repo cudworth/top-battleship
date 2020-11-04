@@ -8,6 +8,10 @@ const p2 = player();
 const g1 = gameboard();
 const g2 = gameboard();
 
+placeShipsRandomly(g1);
+placeShipsRandomly(g2);
+
+/*
 const s1 = [
   { len: 5, r: 0, c: 0, dir: 270 },
   { len: 4, r: 0, c: 2, dir: 270 },
@@ -23,46 +27,99 @@ function placeships(ships, board) {
 }
 
 placeships(s1, g1);
+*/
 
-const primary = document.getElementById('primary-gameboard');
-const tracking = document.getElementById('tracking-gameboard');
+function placeShipsRandomly(board) {
+  const dirs = [0, 90, 180, 270];
+  const locs = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const lengths = [5, 4, 3, 2, 1];
+  const rnd = getRandomFromArray;
+  lengths.forEach((len) => {
+    let success = false;
+    while (success === false) {
+      const guess = [rnd(locs), rnd(locs), rnd(dirs), len];
+      console.log(guess);
+      success = board.placeShip(guess);
+      console.log(success);
+    }
+  });
+}
+
+function getRandomFromArray(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
 
 function drawBoard(parent) {
-  const game_board = [];
+  const cells = [];
   parent.innerHTML = '';
-  const container = document.createElement('div');
-  container.className = 'container';
-  parent.append(container);
+  const grid = document.createElement('div');
+  grid.className = 'grid';
+  parent.append(grid);
   for (let r = 0; r < 10; r++) {
     const row = document.createElement('div');
     row.className = 'row';
-    game_board[r] = [];
-    container.append(row);
+    cells[r] = [];
+    grid.append(row);
     for (let c = 0; c < 10; c++) {
       const cell = document.createElement('div');
       cell.className = 'cell';
       row.append(cell);
-      game_board[r][c] = cell;
+      cells[r][c] = cell;
     }
   }
 
+  function addAttackListener(myBoard, opponentBoard) {
+    cells.forEach((row, r) => {
+      row.forEach((cell, c) => {
+        cell.addEventListener('click', () => {
+          if (myTurn) {
+            const result = opponentBoard.receiveAttack([r, c]);
+            myBoard.logAttack([r, c], result);
+            if (result === 'miss') {
+              myTurn = !myTurn;
+            }
+            render(myBoard.getTracking());
+          }
+        });
+      });
+    });
+  }
+
   function render(board) {
-    console.log(board);
     board.forEach((row, r) => {
       row.forEach((cell, c) => {
         if (cell.ship) {
-          game_board[r][c].classList.add('ship');
+          cells[r][c].classList.add('ship');
         } else {
-          game_board[r][c].classList.remove('ship');
+          cells[r][c].classList.remove('ship');
         }
-        if (cell.attacked) {
-          game_board[r][c].textContent = 'x';
+        if (cell.attacked === 'hit') {
+          cells[r][c].classList.add('hit');
+        } else if (cell.attacked === 'miss') {
+          cells[r][c].classList.add('miss');
         }
       });
     });
   }
-  return { render, game_board };
+  return { render, addAttackListener };
 }
 
-const displayBoard = drawBoard(primary);
-displayBoard.render(g1.getPrimary());
+const primaryBoard = drawBoard(document.getElementById('primary-gameboard'));
+const trackingBoard = drawBoard(document.getElementById('tracking-gameboard'));
+trackingBoard.addAttackListener(g1, g2);
+
+primaryBoard.render(g1.getPrimary());
+trackingBoard.render(g1.getTracking());
+console.log(g1.getPrimary());
+
+let myTurn = true;
+
+window.setInterval(() => {
+  if (!myTurn) {
+    const result = g1.receiveAttack(p2.randomAttack());
+    primaryBoard.render(g1.getPrimary());
+    if (result === 'miss') {
+      myTurn = !myTurn;
+    }
+  }
+}, 2000);

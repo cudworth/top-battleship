@@ -11,7 +11,7 @@ function player() {
     const coords = attacks.splice(
       Math.floor(Math.random() * attacks.length),
       1
-    );
+    )[0];
     attackLog.push(coords);
     return coords;
   }
@@ -22,7 +22,7 @@ function player() {
 
   function hasLost() {}
 
-  return { gameBoard, attack, hasLost };
+  return { gameBoard, attack, hasLost, randomAttack };
 }
 
 //module.exports = player;

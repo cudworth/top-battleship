@@ -60,13 +60,19 @@ function gameBoard() {
 
   function receiveAttack([r, c]) {
     const cell = primary[r][c];
-    cell.attacked = true;
+    //cell.attacked = true;
     if (cell.ship) {
       cell.ship.hit(cell.ship_index);
+      cell.attacked = 'hit';
       return 'hit';
     } else {
+      cell.attacked = 'miss';
       return 'miss';
     }
+  }
+
+  function logAttack([r, c], result) {
+    tracking[r][c].attacked = result;
   }
 
   function allShipsSunk() {
@@ -91,7 +97,14 @@ function gameBoard() {
     return copy;
   }
 
-  return { placeShip, receiveAttack, getPrimary, getTracking, allShipsSunk };
+  return {
+    placeShip,
+    receiveAttack,
+    logAttack,
+    getPrimary,
+    getTracking,
+    allShipsSunk,
+  };
 }
 
 //module.exports = gameBoard;
