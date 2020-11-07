@@ -5,7 +5,7 @@ function ship(length) {
     hit: (i) => {
       if (0 <= i && i < hits.length) {
         hits[i] = true;
-        return i;
+        return true;
       } else {
         return false;
       }
@@ -18,5 +18,4 @@ function ship(length) {
 }
 
 //module.exports = ship;
-
 export default ship;

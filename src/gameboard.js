@@ -1,18 +1,14 @@
 //const ship = require('./ship');
-
 import ship from './ship';
 
 function gameBoard() {
-  const primary = [];
-  const tracking = [];
+  const board = [];
   const ships = [];
 
   for (let i = 0; i < 10; i++) {
-    primary.push([]);
-    tracking.push([]);
+    board.push([]);
     for (let j = 0; j < 10; j++) {
-      primary[i].push({ attacked: false, ship: null, ship_index: null });
-      tracking[i].push({ attacked: false });
+      board[i].push({ attacked: false, ship: null, ship_index: null });
     }
   }
 
@@ -44,23 +40,22 @@ function gameBoard() {
     indices.forEach(([r, c]) => {
       if (r < 0 || 9 < r || c < 0 || 9 < c) {
         success = false;
-      } else if (primary[r][c].ship) {
+      } else if (board[r][c].ship) {
         success = false;
       }
     });
 
     if (success) {
       indices.forEach(([r, c], i) => {
-        primary[r][c].ship = myShip;
-        primary[r][c].ship_index = i;
+        board[r][c].ship = myShip;
+        board[r][c].ship_index = i;
       });
     }
     return success;
   }
 
   function receiveAttack([r, c]) {
-    const cell = primary[r][c];
-    //cell.attacked = true;
+    const cell = board[r][c];
     if (cell.ship) {
       cell.ship.hit(cell.ship_index);
       cell.attacked = 'hit';
@@ -71,24 +66,13 @@ function gameBoard() {
     }
   }
 
-  function logAttack([r, c], result) {
-    tracking[r][c].attacked = result;
-  }
-
   function allShipsSunk() {
     return ships.every((ship) => {
       return ship.isSunk();
     });
   }
 
-  function getPrimary() {
-    return copyBoard(primary);
-  }
-  function getTracking() {
-    return copyBoard(tracking);
-  }
-
-  function copyBoard(board) {
+  function getBoard() {
     const copy = board.map((row) => {
       return row.map((cell) => {
         return { ...cell };
@@ -100,13 +84,10 @@ function gameBoard() {
   return {
     placeShip,
     receiveAttack,
-    logAttack,
-    getPrimary,
-    getTracking,
+    getBoard,
     allShipsSunk,
   };
 }
 
 //module.exports = gameBoard;
-
 export default gameBoard;

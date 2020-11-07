@@ -1,5 +1,4 @@
-//const gameBoard = require('./gameboard');
-import gameBoard from './gameboard';
+const gameBoard = require('./gameboard');
 
 test('module returns an object', () => {
   const myGameBoard = gameBoard();
@@ -10,26 +9,19 @@ test('module has required methods', () => {
   const myGameBoard = gameBoard();
   expect(myGameBoard.placeShip).toBeDefined();
   expect(myGameBoard.receiveAttack).toBeDefined();
-  expect(myGameBoard.getPrimary).toBeDefined();
-  expect(myGameBoard.getTracking).toBeDefined();
+  expect(myGameBoard.getBoard).toBeDefined();
   expect(myGameBoard.allShipsSunk).toBeDefined();
 });
 
 test('module creates a new game board', () => {
   const myGameBoard = gameBoard();
-
-  expect(Array.isArray(myGameBoard.getPrimary())).toBe(true);
-  expect(Array.isArray(myGameBoard.getPrimary()[4])).toBe(true);
-  expect(myGameBoard.getPrimary().length).toBe(10);
-  expect(myGameBoard.getPrimary()[4].length).toBe(10);
-
-  expect(Array.isArray(myGameBoard.getTracking())).toBe(true);
-  expect(Array.isArray(myGameBoard.getTracking()[4])).toBe(true);
-  expect(myGameBoard.getTracking().length).toBe(10);
-  expect(myGameBoard.getTracking()[4].length).toBe(10);
+  expect(Array.isArray(myGameBoard.getBoard())).toBe(true);
+  expect(Array.isArray(myGameBoard.getBoard()[4])).toBe(true);
+  expect(myGameBoard.getBoard().length).toBe(10);
+  expect(myGameBoard.getBoard()[4].length).toBe(10);
 });
 
-test('can place ships onto gameboard', () => {
+test('can place ships onto gameboard in format r, c, dir, len', () => {
   expect(gameBoard().placeShip([0, 0, 0, 4])).toBe(true);
   expect(gameBoard().placeShip([0, 0, 90, 4])).toBe(false);
   expect(gameBoard().placeShip([0, 0, 180, 4])).toBe(false);

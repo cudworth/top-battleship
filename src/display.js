@@ -1,49 +1,68 @@
-function drawGame(game) {
-  const primary = drawBoard(document.getElementById('primary-gameboard'));
-  const tracking = drawBoard(document.getElementById('tracking-gameboard'));
+function displayController() {
+  const db1 = drawBoard(document.getElementById('p1-gameboard'));
+  const db2 = drawBoard(document.getElementById('p2-gameboard'));
+  const gameStatus = document.getElementById('game-status');
 
-  tracking.addAttackListener(game);
-
-  window.setInterval(() => {
-    primary.render(game.gb1.getPrimary());
-    tracking.render(game.gb1.getTracking());
-  }, 500);
-}
-
-function drawBoard(parent) {
-  const cells = [];
-  parent.innerHTML = '';
-  const grid = document.createElement('div');
-  grid.className = 'grid';
-  parent.append(grid);
-  for (let r = 0; r < 10; r++) {
-    const row = document.createElement('div');
-    row.className = 'row';
-    cells[r] = [];
-    grid.append(row);
-    for (let c = 0; c < 10; c++) {
-      const cell = document.createElement('div');
-      cell.className = 'cell';
-      row.append(cell);
-      cells[r][c] = cell;
+  function drawBoard(parent) {
+    parent.innerHTML = '';
+    const cells = [];
+    const grid = document.createElement('div');
+    grid.className = 'grid';
+    parent.append(grid);
+    for (let r = 0; r < 10; r++) {
+      const row = document.createElement('div');
+      row.className = 'row';
+      cells[r] = [];
+      grid.append(row);
+      for (let c = 0; c < 10; c++) {
+        const cell = document.createElement('div');
+        cell.className = 'cell';
+        row.append(cell);
+        cells[r][c] = cell;
+      }
     }
+    return cells;
   }
 
-  function render(board) {
-    board.forEach((row, r) => {
+  function render(gb1, gb2, status, cb) {
+    renderActive(gb1, db1);
+    renderInactive(gb2, db2);
+    setStatus(status);
+  }
+
+  function renderActive(gameBoard, displayBoard) {
+    gameBoard.forEach((row, r) => {
       row.forEach((cell, c) => {
+        displayBoard[r][c].classList.remove('ship', 'hit', 'miss');
         if (cell.ship) {
-          cells[r][c].classList.add('ship');
+          displayBoard[r][c].classList.add('ship');
         } else {
-          cells[r][c].classList.remove('ship');
+          displayBoard[r][c].classList.remove('ship');
         }
         if (cell.attacked === 'hit') {
-          cells[r][c].classList.add('hit');
+          displayBoard[r][c].classList.add('hit');
         } else if (cell.attacked === 'miss') {
-          cells[r][c].classList.add('miss');
+          displayBoard[r][c].classList.add('miss');
         }
       });
     });
+  }
+
+  function renderInactive(gameBoard, displayBoard) {
+    gameBoard.forEach((row, r) => {
+      row.forEach((cell, c) => {
+        displayBoard[r][c].classList.remove('ship', 'hit', 'miss');
+        if (cell.attacked === 'hit') {
+          displayBoard[r][c].classList.add('hit');
+        } else if (cell.attacked === 'miss') {
+          displayBoard[r][c].classList.add('miss');
+        }
+      });
+    });
+  }
+
+  function setStatus(status) {
+    gameStatus.textContent = status;
   }
 
   function addAttackListener(game) {
@@ -63,7 +82,7 @@ function drawBoard(parent) {
     });
   }
 
-  return { render, addAttackListener };
+  return { render };
 }
 
-export default { drawGame };
+export default displayController;

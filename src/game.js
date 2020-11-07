@@ -1,33 +1,49 @@
+//CONTROLLER
 import player from './player';
+import npc from './npc';
 import gameboard from './gameboard';
+import display from './display';
 
-function create() {
+function gameController() {
   const p1 = player();
-  const p2 = player();
+  const p2 = npc();
+
   const gb1 = gameboard();
   const gb2 = gameboard();
-
   placeShipsRandomly(gb1);
   placeShipsRandomly(gb2);
 
-  let myTurn = true;
+  const players = [p1, p2];
+  const boards = [gb1, gb2];
 
+  let active = Math.floor(2 * Math.random());
+
+  const getActive = () => active;
+  const getInactive = () => (active === 0 ? 1 : 0);
+  const nextTurn = () => {
+    active = getInactive();
+  };
+
+  const myDisplay = display(); //create display for gameboards
+  const status = `${getActive() ? 'First player' : 'Second player'} to attack.`;
+  myDisplay.render(
+    boards[getActive()].getBoard(),
+    boards[getInactive()].getBoard(),
+    status,
+    'cbFn'
+  ); //PASS gameboards, player status, and callbacks for receiving attacks
+
+  /*
   window.setInterval(() => {
-    if (!myTurn) {
+    if (active === 1) {
       const result = gb1.receiveAttack(p2.randomAttack());
       if (result === 'miss') {
-        myTurn = !myTurn;
+        console.log('attack missed');
+        nextTurn();
       }
     }
   }, 500);
-
-  const game = {
-    gb1,
-    gb2,
-    isMyTurn: () => myTurn,
-    nextTurn: () => (myTurn = !myTurn),
-  };
-  return game;
+  */
 }
 
 function placeShipsRandomly(board) {
@@ -48,4 +64,4 @@ function getRandomFromArray(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-export default { create };
+export default gameController;

@@ -1,5 +1,4 @@
 //const player = require('./player');
-import player from './player';
 
 test('module returns an object', () => {
   expect(typeof player()).toBe('object');

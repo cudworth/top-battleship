@@ -1,6 +1,4 @@
-//const ship = require('./ship');
-
-import ship from './ship';
+const ship = require('./ship');
 
 test('module returns an object', () => {
   const myShip = ship(4);
@@ -21,8 +19,8 @@ test('has property length', () => {
 
 test('registers hits accurately', () => {
   const myShip = ship(4);
-  expect(myShip.hit(3)).toBe(3);
-  expect(myShip.hit(2)).toBe(2);
+  expect(myShip.hit(3)).toBe(true);
+  expect(myShip.hit(2)).toBe(true);
   expect(myShip.hit(-9)).toBe(false);
   expect(myShip.hit(4)).toBe(false);
 });
