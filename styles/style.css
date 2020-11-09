@@ -2,6 +2,7 @@
   border: 0.5px solid lightgray;
   width: 400px;
   height: 400px;
+  margin: 42px;
 }
 
 .row {
@@ -32,4 +33,13 @@
 
 .miss {
   background-color: lightblue;
+}
+
+.gameboard-container {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+}
+
+.gameboard {
 }

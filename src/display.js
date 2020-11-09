@@ -27,6 +27,7 @@ function displayController() {
   function render(gb1, gb2, status, cb) {
     renderActive(gb1, db1);
     renderInactive(gb2, db2);
+    addAttackListener(db2, cb);
     setStatus(status);
   }
 
@@ -65,19 +66,10 @@ function displayController() {
     gameStatus.textContent = status;
   }
 
-  function addAttackListener(game) {
-    cells.forEach((row, r) => {
+  function addAttackListener(displayBoard, cb) {
+    displayBoard.forEach((row, r) => {
       row.forEach((cell, c) => {
-        cell.addEventListener('click', () => {
-          if (game.isMyTurn()) {
-            const result = game.gb2.receiveAttack([r, c]);
-            game.gb1.logAttack([r, c], result);
-            if (result === 'miss') {
-              game.nextTurn();
-            }
-            render(game.gb1.getTracking());
-          }
-        });
+        cell.addEventListener('click', () => cb([r, c]));
       });
     });
   }

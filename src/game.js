@@ -30,7 +30,11 @@ function gameController() {
     boards[getActive()].getBoard(),
     boards[getInactive()].getBoard(),
     status,
-    'cbFn'
+    (coords) => {
+      const result = boards[getInactive()].receiveAttack(coords);
+      console.log(`Attack on coords: ${coords}`);
+      console.log(result);
+    }
   ); //PASS gameboards, player status, and callbacks for receiving attacks
 
   /*
@@ -45,6 +49,19 @@ function gameController() {
   }, 500);
   */
 }
+
+/*
+{
+          if (game.isMyTurn()) {
+            const result = game.gb2.receiveAttack([r, c]);
+            game.gb1.logAttack([r, c], result);
+            if (result === 'miss') {
+              game.nextTurn();
+            }
+            render(game.gb1.getTracking());
+          }
+        }
+*/
 
 function placeShipsRandomly(board) {
   const dirs = [0, 90, 180, 270];
