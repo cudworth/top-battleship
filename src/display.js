@@ -1,6 +1,7 @@
-function displayController() {
+function displayController(attackHandler) {
   const db1 = drawBoard(document.getElementById('p1-gameboard'));
   const db2 = drawBoard(document.getElementById('p2-gameboard'));
+  addAttackListener(db2, attackHandler);
   const gameStatus = document.getElementById('game-status');
 
   function drawBoard(parent) {
@@ -25,16 +26,15 @@ function displayController() {
   }
 
   function render(gb1, gb2, status, cb) {
+    clear();
     renderActive(gb1, db1);
     renderInactive(gb2, db2);
-    addAttackListener(db2, cb);
     setStatus(status);
   }
 
   function renderActive(gameBoard, displayBoard) {
     gameBoard.forEach((row, r) => {
       row.forEach((cell, c) => {
-        displayBoard[r][c].classList.remove('ship', 'hit', 'miss');
         if (cell.ship) {
           displayBoard[r][c].classList.add('ship');
         } else {
@@ -52,7 +52,6 @@ function displayController() {
   function renderInactive(gameBoard, displayBoard) {
     gameBoard.forEach((row, r) => {
       row.forEach((cell, c) => {
-        displayBoard[r][c].classList.remove('ship', 'hit', 'miss');
         if (cell.attacked === 'hit') {
           displayBoard[r][c].classList.add('hit');
         } else if (cell.attacked === 'miss') {
@@ -60,6 +59,36 @@ function displayController() {
         }
       });
     });
+  }
+
+  function clear() {
+    [db1, db2].forEach((displayBoard) => {
+      displayBoard.forEach((row) => {
+        row.forEach((cell) => {
+          cell.classList.remove('ship', 'hit', 'miss');
+        });
+      });
+    });
+  }
+
+  function gameEnd(text, cb) {
+    clear();
+    const parent = document.body;
+    const notifier = document.createElement('div');
+    parent.append(notifier);
+    notifier.className = 'notifier';
+    notifier.textContent = text;
+    const newGameBtn = document.createElement('button');
+    newGameBtn.textContent = 'New Game';
+    newGameBtn.addEventListener('click', () => {
+      parent.removeChild(notifier);
+      cb();
+    });
+    notifier.append(newGameBtn);
+  }
+
+  function pause() {
+    clear();
   }
 
   function setStatus(status) {
@@ -74,7 +103,7 @@ function displayController() {
     });
   }
 
-  return { render };
+  return { render, pause, gameEnd };
 }
 
 export default displayController;

@@ -1,3 +1,7 @@
 import game from './game';
 
-const myGame = game();
+function startGame() {
+  const myGame = game(startGame);
+}
+
+startGame();
