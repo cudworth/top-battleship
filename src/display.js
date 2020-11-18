@@ -1,7 +1,11 @@
-function displayController(attackHandler) {
+function displayController() {
+  const menu = document.getElementById('menu');
+  const menuStatus = document.getElementById('menu-status');
+  const pvpBtn = document.getElementById('pvpBtn');
+  const pvcBtn = document.getElementById('pvcBtn');
+
   const db1 = drawBoard(document.getElementById('p1-gameboard'));
   const db2 = drawBoard(document.getElementById('p2-gameboard'));
-  addAttackListener(db2, attackHandler);
   const gameStatus = document.getElementById('game-status');
 
   function drawBoard(parent) {
@@ -71,20 +75,27 @@ function displayController(attackHandler) {
     });
   }
 
-  function gameEnd(text, cb) {
-    clear();
-    const parent = document.body;
-    const notifier = document.createElement('div');
-    parent.append(notifier);
-    notifier.className = 'notifier';
-    notifier.textContent = text;
-    const newGameBtn = document.createElement('button');
-    newGameBtn.textContent = 'New Game';
-    newGameBtn.addEventListener('click', () => {
-      parent.removeChild(notifier);
-      cb();
+  function showMenu(status, pvpCb, pvcCB) {
+    menuStatus.innerHTML = status;
+    menu.classList.add('menu');
+    pvpBtn.addEventListener('click', () => {
+      toggleClass('menu', 'hidden');
+      pvpCb();
     });
-    notifier.append(newGameBtn);
+    pvcBtn.addEventListener('click', () => {
+      toggleClass('menu', 'hidden');
+      pvcCB();
+    });
+  }
+
+  function toggleClass(c1, c2) {
+    if (menu.classList.contains(c1)) {
+      menu.classList.remove(c1);
+      menu.classList.add(c2);
+    } else {
+      menu.classList.remove(c2);
+      menu.classList.add(c1);
+    }
   }
 
   function pause() {
@@ -95,15 +106,15 @@ function displayController(attackHandler) {
     gameStatus.textContent = status;
   }
 
-  function addAttackListener(displayBoard, cb) {
-    displayBoard.forEach((row, r) => {
+  function addAttackListener(attackHandler) {
+    db2.forEach((row, r) => {
       row.forEach((cell, c) => {
-        cell.addEventListener('click', () => cb([r, c]));
+        cell.addEventListener('click', () => attackHandler([r, c]));
       });
     });
   }
 
-  return { render, pause, gameEnd };
+  return { render, pause, showMenu, addAttackListener };
 }
 
 export default displayController;

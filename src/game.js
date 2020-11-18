@@ -5,63 +5,67 @@ import gameboard from './gameboard';
 import display from './display';
 
 function gameController(newGameCB) {
-  const p1 = npc();
-  const p2 = npc();
+  const myDisplay = display(); //initialize display
 
-  const gb1 = gameboard();
-  const gb2 = gameboard();
-  placeShipsRandomly(gb1);
-  placeShipsRandomly(gb2);
+  myDisplay.showMenu(
+    '<h1>Play Battleship</h1><h2>Select a game mode:</h2>',
+    () => create('pvp'),
+    () => create('pvc')
+  );
 
-  const players = [p1, p2];
-  const boards = [gb1, gb2];
+  function create(type) {
+    const isPvp = type === 'pvp';
 
-  let active = Math.floor(2 * Math.random());
+    const p1 = player();
+    const p2 = isPvp ? player() : npc();
 
-  const getActive = () => active;
-  const getInactive = () => (active === 0 ? 1 : 0);
-  const nextTurn = () => {
-    active = getInactive();
-  };
+    const gb1 = gameboard();
+    const gb2 = gameboard();
 
-  const myDisplay = display(attackHandler); //create display for gameboards
-  render(); //display game
-  //myDisplay.gameEnd('Hey there!', () => newGameCB());
+    placeShipsRandomly(gb1);
+    placeShipsRandomly(gb2);
 
-  /*
-  window.setInterval(() => {
-    const coords = players[getActive()].randomAttack();
-    attackHandler(coords);
-  }, 50);
-  */
+    const players = [p1, p2];
+    const boards = [gb1, gb2];
 
-  function attackHandler(coords) {
-    const result = boards[getInactive()].receiveAttack(coords);
-    const gameLost = boards[getInactive()].allShipsSunk();
-    console.log(`All ships sunk? ${gameLost}`);
-    if (result === 'miss') {
-      nextTurn();
-      myDisplay.pause();
+    let active = Math.floor(2 * Math.random());
+
+    const getActive = () => active;
+    const getInactive = () => (active === 0 ? 1 : 0);
+    const nextTurn = () => {
+      active = getInactive();
+    };
+
+    function attackHandler(coords) {
+      const result = boards[getInactive()].receiveAttack(coords);
+      const gameLost = boards[getInactive()].allShipsSunk();
+      if (result === 'miss') {
+        nextTurn();
+        myDisplay.pause();
+      }
+      render();
+
+      if (gameLost) {
+        const text = `${
+          getActive() ? 'Second Player' : 'First Player'
+        } is victorious.`;
+        myDisplay.endMenu(text, newGameCB);
+      }
     }
+
+    function render() {
+      const status = `${
+        getActive() ? 'First player' : 'Second player'
+      } to attack.`;
+      myDisplay.render(
+        boards[getActive()].getBoard(),
+        boards[getInactive()].getBoard(),
+        status
+      );
+    }
+
+    myDisplay.addAttackListener(attackHandler);
     render();
-
-    if (gameLost) {
-      const text = `${
-        getActive() ? 'Second Player' : 'First Player'
-      } is victorious.`;
-      myDisplay.gameEnd(text, newGameCB);
-    }
-  }
-
-  function render() {
-    const status = `${
-      getActive() ? 'First player' : 'Second player'
-    } to attack.`;
-    myDisplay.render(
-      boards[getActive()].getBoard(),
-      boards[getInactive()].getBoard(),
-      status
-    );
   }
 }
 
