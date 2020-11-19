@@ -7,7 +7,7 @@ import display from './display';
 function gameController(newGameCB) {
   const myDisplay = display(); //initialize display
 
-  myDisplay.showMenu(
+  myDisplay.menu(
     '<h1>Play Battleship</h1><h2>Select a game mode:</h2>',
     () => create('pvp'),
     () => create('pvc')
@@ -39,32 +39,55 @@ function gameController(newGameCB) {
     function attackHandler(coords) {
       const result = boards[getInactive()].receiveAttack(coords);
       const gameLost = boards[getInactive()].allShipsSunk();
-      if (result === 'miss') {
-        nextTurn();
-        myDisplay.pause();
-      }
-      render();
 
       if (gameLost) {
         const text = `${
           getActive() ? 'Second Player' : 'First Player'
         } is victorious.`;
-        myDisplay.endMenu(text, newGameCB);
+        myDisplay.menu(
+          text,
+          () => create('pvp'),
+          () => create('pvc')
+        );
+      }
+      if (result === 'hit') {
+        if (!isPvp && getActive()) {
+          attackHandler(p2.randomAttack());
+        } else {
+          render();
+        }
+      } else if (result === 'miss' && isPvp) {
+        myDisplay.clear();
+        nextTurn();
+        window.setTimeout(() => {
+          render();
+        }, 2000);
+      } else if (result === 'miss' && !isPvp) {
+        nextTurn();
+        render();
+        if (getActive()) {
+          attackHandler(p2.randomAttack());
+        } else {
+          render();
+        }
       }
     }
 
     function render() {
-      const status = `${
+      const statusText = `${
         getActive() ? 'First player' : 'Second player'
       } to attack.`;
       myDisplay.render(
         boards[getActive()].getBoard(),
         boards[getInactive()].getBoard(),
-        status
+        statusText,
+        !isPvp && getActive() ? () => {} : attackHandler
       );
     }
 
-    myDisplay.addAttackListener(attackHandler);
+    if (getActive() && !isPvp) {
+      attackHandler(p2.randomAttack());
+    }
     render();
   }
 }
