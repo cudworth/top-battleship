@@ -108,7 +108,22 @@ function displayController() {
     db2.innerHTML = '';
   }
 
-  return { render, clear, menu };
+  function changePlayer() {
+    const div = document.createElement('div');
+    div.textContent =
+      'Your attack missed, pass computer to your opponent and press any key to continue play.';
+    div.classList.add('menu');
+    document.body.append(div);
+
+    document.addEventListener('keydown', play);
+
+    function play() {
+      document.body.removeChild(div);
+      document.removeEventListener('keydown', play);
+    }
+  }
+
+  return { render, clear, menu, changePlayer };
 }
 
 export default displayController;

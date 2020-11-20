@@ -57,11 +57,10 @@ function gameController(newGameCB) {
             render();
           }
         } else if (result === 'miss' && isPvp) {
-          myDisplay.clear();
+          //myDisplay.clear();
+          myDisplay.changePlayer();
           nextTurn();
-          window.setTimeout(() => {
-            render();
-          }, 2000);
+          render();
         } else if (result === 'miss' && !isPvp) {
           nextTurn();
           render();
