@@ -49,26 +49,27 @@ function gameController(newGameCB) {
           () => create('pvp'),
           () => create('pvc')
         );
-      }
-      if (result === 'hit') {
-        if (!isPvp && getActive()) {
-          attackHandler(p2.randomAttack());
-        } else {
+      } else {
+        if (result === 'hit') {
+          if (!isPvp && getActive()) {
+            attackHandler(p2.randomAttack());
+          } else {
+            render();
+          }
+        } else if (result === 'miss' && isPvp) {
+          myDisplay.clear();
+          nextTurn();
+          window.setTimeout(() => {
+            render();
+          }, 2000);
+        } else if (result === 'miss' && !isPvp) {
+          nextTurn();
           render();
-        }
-      } else if (result === 'miss' && isPvp) {
-        myDisplay.clear();
-        nextTurn();
-        window.setTimeout(() => {
-          render();
-        }, 2000);
-      } else if (result === 'miss' && !isPvp) {
-        nextTurn();
-        render();
-        if (getActive()) {
-          attackHandler(p2.randomAttack());
-        } else {
-          render();
+          if (getActive()) {
+            attackHandler(p2.randomAttack());
+          } else {
+            render();
+          }
         }
       }
     }

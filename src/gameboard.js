@@ -8,7 +8,7 @@ function gameBoard() {
   for (let i = 0; i < 10; i++) {
     board.push([]);
     for (let j = 0; j < 10; j++) {
-      board[i].push({ attacked: false, ship: null, ship_index: null });
+      board[i].push({ attacked: false, ship: false, ship_index: false });
     }
   }
 
@@ -16,7 +16,6 @@ function gameBoard() {
     const indices = [];
 
     const myShip = ship(length);
-    ships.push(myShip);
 
     for (let n = 0; n < length; n++) {
       switch (dir) {
@@ -46,6 +45,8 @@ function gameBoard() {
     });
 
     if (success) {
+      ships.push(myShip);
+
       indices.forEach(([r, c], i) => {
         board[r][c].ship = myShip;
         board[r][c].ship_index = i;

@@ -69,7 +69,8 @@ function displayController() {
 
   function menu(status, pvpCb, pvcCB) {
     menuStatus.innerHTML = status;
-    domMenu.classList.add('menu');
+    //domMenu.classList.add('menu');
+    toggleClass('menu', 'hidden');
     pvpBtn.addEventListener('click', () => {
       toggleClass('menu', 'hidden');
       pvpCb();
