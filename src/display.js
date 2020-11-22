@@ -8,13 +8,24 @@ function displayController() {
 
   const gameStatus = document.getElementById('game-status');
 
+  function init(pvpCB, pvcCB) {
+    pvpBtn.addEventListener('click', () => {
+      toggleClass(domMenu, 'menu', 'hidden');
+      pvpCB();
+    });
+    pvcBtn.addEventListener('click', () => {
+      toggleClass(domMenu, 'menu', 'hidden');
+      pvcCB();
+    });
+  }
+
   function render(gb1, gb2, status, attackHandler) {
     const activeDisplay = drawBoard(db1);
     const inactiveDisplay = drawBoard(db2);
     renderActive(gb1, activeDisplay);
     renderInactive(gb2, inactiveDisplay);
     addAttackListener(inactiveDisplay, attackHandler);
-    setStatus(status);
+    setGameStatus(status);
   }
 
   function drawBoard(parent) {
@@ -67,31 +78,22 @@ function displayController() {
     });
   }
 
-  function menu(status, pvpCb, pvcCB) {
-    menuStatus.innerHTML = status;
-    //domMenu.classList.add('menu');
-    toggleClass('menu', 'hidden');
-    pvpBtn.addEventListener('click', () => {
-      toggleClass('menu', 'hidden');
-      pvpCb();
-    });
-    pvcBtn.addEventListener('click', () => {
-      toggleClass('menu', 'hidden');
-      pvcCB();
-    });
+  function menu(status) {
+    menuStatus.innerHTML = `<h2>${status}</h2>`;
+    toggleClass(domMenu, 'menu', 'hidden');
   }
 
-  function toggleClass(c1, c2) {
-    if (domMenu.classList.contains(c1)) {
-      domMenu.classList.remove(c1);
-      domMenu.classList.add(c2);
+  function toggleClass(n, c1, c2) {
+    if (n.classList.contains(c1)) {
+      n.classList.remove(c1);
+      n.classList.add(c2);
     } else {
-      domMenu.classList.remove(c2);
-      domMenu.classList.add(c1);
+      n.classList.remove(c2);
+      n.classList.add(c1);
     }
   }
 
-  function setStatus(status) {
+  function setGameStatus(status) {
     gameStatus.textContent = status;
   }
 
@@ -111,7 +113,7 @@ function displayController() {
   function changePlayer() {
     const div = document.createElement('div');
     div.textContent =
-      'Your attack missed, pass computer to your opponent and press any key to continue play.';
+      'Attack missed the enemy ships, pass computer to your opponent and press any key to continue play.';
     div.classList.add('menu');
     document.body.append(div);
 
@@ -123,7 +125,7 @@ function displayController() {
     }
   }
 
-  return { render, clear, menu, changePlayer };
+  return { init, render, clear, menu, changePlayer, setGameStatus };
 }
 
 export default displayController;

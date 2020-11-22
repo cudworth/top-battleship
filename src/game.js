@@ -4,14 +4,15 @@ import npc from './npc';
 import gameboard from './gameboard';
 import display from './display';
 
-function gameController(newGameCB) {
+function gameController() {
   const myDisplay = display(); //initialize display
 
-  myDisplay.menu(
-    '<h1>Play Battleship</h1><h2>Select a game mode:</h2>',
+  myDisplay.init(
     () => create('pvp'),
     () => create('pvc')
   );
+
+  myDisplay.menu('Select a Game Mode');
 
   function create(type) {
     const isPvp = type === 'pvp';
@@ -41,14 +42,11 @@ function gameController(newGameCB) {
       const gameLost = boards[getInactive()].allShipsSunk();
 
       if (gameLost) {
+        myDisplay.setGameStatus('');
         const text = `${
           getActive() ? 'Second Player' : 'First Player'
         } is victorious.`;
-        myDisplay.menu(
-          text,
-          () => create('pvp'),
-          () => create('pvc')
-        );
+        myDisplay.menu(text);
       } else {
         if (result === 'hit') {
           if (!isPvp && getActive()) {
@@ -57,7 +55,6 @@ function gameController(newGameCB) {
             render();
           }
         } else if (result === 'miss' && isPvp) {
-          //myDisplay.clear();
           myDisplay.changePlayer();
           nextTurn();
           render();
@@ -75,8 +72,8 @@ function gameController(newGameCB) {
 
     function render() {
       const statusText = `${
-        getActive() ? 'First player' : 'Second player'
-      } to attack.`;
+        getActive() ? "Second player's" : "First player's"
+      } turn to attack.`;
       myDisplay.render(
         boards[getActive()].getBoard(),
         boards[getInactive()].getBoard(),
