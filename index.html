@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Battleship</title>
+        <link rel='stylesheet' type='text/css' href='./styles/reset.css'/>
+        <link rel='stylesheet' type='text/css' href='./styles/style.css'/>
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+    </head>
+
+    <body>
+
+        <div id='menu'>
+            <div id='menu-status'></div>
+            <div>
+                <input id='pvpBtn' type='button' value='Player vs Player'></input>
+            </div>
+            <div>
+                <input id='pvcBtn' type='button' value="Player vs Computer"></input>
+            </div>
+        </div>
+        
+        <div class="header">
+            <h1>Battleship</h1>
+            <h2 id="game-status"></h2>
+        </div>
+        <div class='game-container'>
+            <div class="gameboard-container">
+                <h3>Player Board</h3>
+                <div id="p1-gameboard" class="gameboard"></div>
+            </div>
+            <div class="gameboard-container">
+                <h3>Tracking Board (Click to Attack)</h3>
+                <div id="p2-gameboard" class="gameboard"></div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <h3>
+                By Austin Cudworth for The Odin Project
+            </h3>
+        </div> 
+        <script src="./index.js"></script>
+    </body>
+</html>
